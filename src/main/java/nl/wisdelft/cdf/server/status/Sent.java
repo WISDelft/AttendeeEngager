@@ -1,7 +1,7 @@
 /**
  * 
  */
-package nl.wisdelft.cdf.server;
+package nl.wisdelft.cdf.server.status;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

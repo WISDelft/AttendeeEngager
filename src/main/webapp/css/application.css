@@ -1,12 +1,34 @@
 /* Space out content a bit */
 body {
-  padding-top: 20px;
-  padding-bottom: 20px;
+	padding-top: 20px; padding-bottom: 20px;
 }
 
-/* Customize container */
-@media (min-width: 768px) {
-  .container {
-    max-width: 730px;
-  }
+.navbar {
+	margin-bottom: 20px;
 }
+
+.container
+{
+	width:87%;
+}
+
+a.vote {
+	margin-right: 7px;
+}
+
+a.vote.green {
+	color: green;
+}
+
+a.vote.red {
+	color: red;
+}
+
+.imageRating{
+	text-align: center;	
+	font-size: xx-large;
+}
+.imageRating span:first-child{
+	margin-right:5%;
+}
+	

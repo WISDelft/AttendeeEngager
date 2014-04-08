@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n-key="Fuorisalone_Tips">Fuorisalone Tips</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="../../../../../../webapp/bootstrap-3.1.1-dist/css/bootstrap.css" />
+<link rel="stylesheet" href="http://web.studiolabo.it/test/fs14/tips.css" />
+<link rel="stylesheet" href="../../../../../../webapp/css/application.css" />
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+	<div class="container">
+		<!-- Static navbar -->
+		<div data-field="navigation-template" class="navbar navbar-default" role="navigation">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#" data-i18n-key="Fuorisalone_Tips">Fuorisalone Tips</a>
+				</div>
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li class="active"><a data-field="lnkDashboard" href="#" data-i18n-key="Dashboard">Dashboard</a></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<span data-i18n-key="Language">Language</span> <b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a id="english" href="#" lang="en" data-i18n-key="English">English</a></li>
+								<li><a id="italian" href="#" lang="it" data-i18n-key="Italian">Italian</a></li>
+							</ul></li>
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+			<!--/.container-fluid -->
+		</div>
+		<!-- /.navbar -->
+		<div class="app-template">
+			<div data-field="navigationBar"></div>
+			<div class="page-header">
+				<h1>
+					<span data-i18n-key="Personalized_tips">Personalized tips</span><small> <span data-i18n-key="for">for</span> <span
+						data-field="screenNameBig">@joosterman</span></small>
+				</h1>
+			</div>
+			<div data-field="recommendationQuestionBig" class="jumbotron recommendationQuestionBig">
+				<h2 data-i18n-key="optinQuestion">Would you like personalized tips for interesting venues?</h2>
+				<br />
+				<button data-field="optinBig" type="button" class="btn btn-success btn-lg" data-i18n-key="Yes,_send_me_recommendations">Yes,
+					send me recommendations!</button>
+				&nbsp;
+				<button data-field="optoutBig" type="button" class="btn btn-danger btn-lg" data-i18n-key="No,_dont_send_me_recommendations">No,
+					don't send me recommendations</button>
+			</div>
+			<div class="row">
+				<div class="col-md-8 col-sm-12">
+					<div data-field="recommendationList" class="panel-group" id="accordion">
+						<div data-field="recommendation-divider-template" class="panel panel-info">
+							<div class="panel-heading">
+								<h4 class="panel-title">
+									<span data-field="dateDay">Tuesday</span> <span data-field="dateMonth">April</span> <span data-field="dateDayNumber">8th</span> <span
+										class="badge pull-right"><span data-field="nrRecommendations">2</span> <span class="hidden-xs"
+										data-i18n-key="recommendation_s">recommendation(s)</span></span>
+								</h4>
+							</div>
+						</div>
+						<div data-field="recommendation-template" class="panel panel-default">
+							<div class="panel-heading">
+								<div class="h4 panel-title">
+									<small><span data-i18n-key="Location">Location</span>:</small>
+									<a href="#panel1" data-field="collapseLink" data-toggle="collapse" data-parent="#accordion"
+										title="Click to see events on this location">
+										<span data-field="recVenueName">B&B Italia</span> @ <em><span data-field="recVenueAddress">Via Durini, 14</span></em>
+									</a>
+									<div class="btn-group btn-group-xs pull-right">
+										<a data-field="visitPage" target="_blank" class="btn btn-default">
+											<span data-i18n-key="Visit_site">Visit site</span> <span class="glyphicon glyphicon-globe"></span>
+										</a>
+										<button data-field="voteUp" type="button" class="btn btn-default">
+											<span class="glyphicon glyphicon-thumbs-up"></span>
+										</button>
+										<button data-field="voteDown" type="button" class="btn btn-default">
+											<span class="glyphicon glyphicon-thumbs-down"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div id="panel1" data-field="collapsePanel" class="panel-collapse collapse">
+								<div class="panel-body">
+									<div data-field="venueEventListWidget" class="list-group">
+										<a data-field="event-template" id="eventLink" href="#" class="list-group-item" title="Click to visit the page of this event">
+											<small><span data-i18n-key="Event">Event</span>:</small> <span data-field="eventName">Design Atelier Oï</span>
+										</a>
+										<a href="#" class="list-group-item">
+											<small>Event:</small> Edward Barber & Jay Osgerby<span class="badge pull-right">14 - 16h</span>
+										</a>
+										<a href="#" class="list-group-item">
+											<small>Event:</small> Gabriele e Oscar Buratti<span class="badge pull-right">16 - 18h</span>
+										</a>
+										<a href="#" class="list-group-item">
+											<small>Event:</small> Antonio Citterio<span class="badge pull-right">18 - 19h</span>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class=" col-md-4 col-sm-12">
+					<ul class="list-group">
+						<li class="list-group-item list-group-item-info"><strong data-i18n-key="Personal_info">Personal info</strong></li>
+						<li class="list-group-item"><span data-i18n-key="Screenname">Screenname</span>: <span data-field="screenName" class="pull-right"></span></li>
+						<li class="list-group-item"><span data-i18n-key="Current_status">Current status</span>:
+							<div class="pull-right">
+								<span data-field="status" data-toggle="tooltip" data-placement="bottom" data-i18n-key="Opted_in"></span>
+								<button data-field="optoutSmall" type="button" class="btn btn-danger btn-xs" data-i18n-key="Opt-out">Opt-out</button>
+							</div></li>
+						<li class="list-group-item"><span data-i18n-key="Communication_preference">Communication preference</span>:
+							<div class="btn-group pull-right">
+								<button data-field="btnEnglish" type="button" class="btn btn-primary btn-xs" lang="en" data-i18n-key="English">English</button>
+								<button data-field="btnItalian" type="button" class="btn btn-default btn-xs" lang="it" data-i18n-key="Italian">Italian</button>
+							</div></li>
+						<li class="list-group-item"><span data-i18n-key="Following">Following</span> @fuorisalonetips: <span data-field="following"
+							class="pull-right"></span>
+						<li class="list-group-item"><span data-i18n-key="Recommendations_received">Recommendations received</span>: <span
+							data-field="receivedRecommendations" class="pull-right"></span>
+					</ul>
+					<!-- 
+					<ul class="list-group">
+						<li class="list-group-item list-group-item-info"><strong>Things to do</strong></li>
+						<li class="list-group-item">Tag images from <strong>B&B Italia</strong>
+							<button type="button" class="btn btn-xs btn-primary pull-right">Go!</button></li>
+						<li class="list-group-item">Tag images from <strong>Bisazza</strong>
+							<button type="button" class="btn btn-xs btn-primary pull-right">Go!</button></li>
+					</ul>
+					 -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>-->
+	<script src="../../../../../../webapp//js/jquery-2.1.0.min.js"></script>
+	<!-- Latest compiled and minified JavaScript -->
+	<!-- <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script> -->
+	<script src="../../../../../../webapp//bootstrap-3.1.1-dist/js/bootstrap.js"></script>
+	<!-- Twitter javascript -->
+	<script src="http://platform.twitter.com/widgets.js"></script>
+</body>
+</html>

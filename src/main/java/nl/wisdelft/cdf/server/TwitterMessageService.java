@@ -3,7 +3,6 @@
  */
 package nl.wisdelft.cdf.server;
 
-import java.util.List;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -75,9 +74,4 @@ public class TwitterMessageService {
 	public TwitterMessage getById(Long id) {
 		return em.find(TwitterMessage.class, id);
 	}
-
-	public List<TwitterMessage> getAll() {
-		return em.createNamedQuery("allQueuedMessages", TwitterMessage.class).getResultList();
-	}
-
 }

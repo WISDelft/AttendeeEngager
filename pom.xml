@@ -27,7 +27,7 @@
   
 
   <properties>
-    <errai.version>3.0.0.20140214-M4</errai.version>
+    <errai.version>3.0.0.20140325-M5</errai.version>
     <gwt.version>2.5.1</gwt.version>
     <slf4j.version>1.5.11</slf4j.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,7 +35,8 @@
     <errai.dev.context>${project.artifactId}</errai.dev.context>
     <as.version>7.1.1.Final</as.version>
     <!-- Add the absolute path for $JBOSS_HOME below to manage another instance -->
-    <errai.jboss.home>${project.build.directory}/jboss-as-${as.version}</errai.jboss.home>
+    <!-- <errai.jboss.home>${project.build.directory}/jboss-as-${as.version}</errai.jboss.home>-->
+    <errai.jboss.home>/Applications/jboss-as-7.1.1.Final</errai.jboss.home>
   </properties>
 
   <dependencyManagement>
@@ -94,6 +95,12 @@
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-javaee-all</artifactId>
+      <exclusions>
+      	<exclusion>
+      		<artifactId>errai-jaxrs-provider</artifactId>
+      		<groupId>org.jboss.errai</groupId>
+      	</exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
@@ -125,8 +132,44 @@
     <dependency>
     	<groupId>org.twitter4j</groupId>
     	<artifactId>twitter4j-core</artifactId>
-    	<version>3.0.5</version>
+    	<version>4.0.1</version>
     </dependency>
+    <dependency>
+    	<groupId>com.google.code.gson</groupId>
+    	<artifactId>gson</artifactId>
+    	<version>2.2.4</version>
+    </dependency>
+    <dependency> 
+    	<groupId>org.apache.activemq</groupId>
+    	<artifactId>activemq-core</artifactId>
+    	<version>5.7.0</version>
+    </dependency>
+    <dependency>
+		<groupId>org.apache.httpcomponents</groupId>
+		<artifactId>httpclient</artifactId>
+		<version>4.3.3</version>
+	</dependency>
+	<dependency>
+		<groupId>commons-configuration</groupId>
+		<artifactId>commons-configuration</artifactId>
+		<version>1.10</version>
+	</dependency>
+	<dependency>
+		<groupId>eu.eit.cpsma</groupId>
+		<artifactId>cpsma4mdw14</artifactId>
+		<version>0.1.3</version>
+	</dependency>
+	<dependency>
+		<groupId>org.mockito</groupId>
+  		<artifactId>mockito-core</artifactId>  
+  		<version>1.9.5</version> 
+  		<scope>test</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.apache.commons</groupId>
+  		<artifactId>commons-lang3</artifactId>
+  		<version>3.3.1</version>
+  	</dependency>
   </dependencies>
 
   <repositories>
@@ -182,8 +225,11 @@
           </execution>
         </executions>
         <configuration>
-          <extraJvmArgs>-Dgwt.compiler.optimizationLevel=0 -Dgwt.compiler.disableAggressiveOptimization=true -Xmx712m -XX:CompileThreshold=7000 -XX:MaxPermSize=128M -Derrai.jboss.home=${errai.jboss.home} -Derrai.dev.context=${errai.dev.context} -Derrai.jboss.javaagent.path=${settings.localRepository}/org/jboss/errai/errai-client-local-class-hider/${errai.version}/errai-client-local-class-hider-${errai.version}.jar</extraJvmArgs>
-          <logLevel>INFO</logLevel>
+          <extraJvmArgs>-Xmx712m -XX:CompileThreshold=7000 -XX:MaxPermSize=1024M -Derrai.jboss.home=${errai.jboss.home} -Derrai.dev.context=${errai.dev.context} -Derrai.jboss.javaagent.path=${settings.localRepository}/org/jboss/errai/errai-client-local-class-hider/${errai.version}/errai-client-local-class-hider-${errai.version}.jar</extraJvmArgs>
+          <logLevel>WARN</logLevel>
+          <draftCompile>true</draftCompile>
+          <disableAggressiveOptimization>true</disableAggressiveOptimization>
+          <optimizationLevel>0</optimizationLevel>
           <noServer>false</noServer>
           <server>org.jboss.errai.cdi.server.gwt.JBossLauncher</server>
           <disableCastChecking>true</disableCastChecking>
@@ -219,7 +265,7 @@
         </configuration>
       </plugin>
       <!-- Unpack jboss-as from maven. Remove this if you wish to use your own jboss/wildfly instance. -->
-      <plugin>
+      <!-- <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
@@ -243,7 +289,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>      
+      </plugin>   -->   
     </plugins>
   </build>
 

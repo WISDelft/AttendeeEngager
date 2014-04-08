@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AttendeeEngager</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="../../../../../../webapp/bootstrap-3.1.1-dist/css/bootstrap.css" />
+<link rel="stylesheet" href="http://web.studiolabo.it/test/fs14/tips.css" />
+<link rel="stylesheet" href="../../../../../../webapp/css/application.css" />
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+	<div class="container">
+		<!-- Static navbar -->
+		<div class="navbar navbar-default" role="navigation" data-role="dummy">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">Fuorisalone Tips</a>
+				</div>
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="#" data-i18n-key="dashboard">Dashboard</a></li>
+						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<span data-i18n-key="tasks=">Tasks</span> <b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li class="dropdown-header">Image tagging</li>
+								<li><a href="#">B&B Italia</a></li>
+								<li><a href="#">Bisazza</a></li>
+							</ul></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Language <b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li class="active"><a href="#">English</a></li>
+								<li><a href="#" class="disabled">Italian</a></li>
+							</ul></li>
+					</ul>
+				</div>
+				<!--/.nav-collapse -->
+			</div>
+			<!--/.container-fluid -->
+		</div>
+		<!-- /.navbar -->
+		<div class="app-template">
+			<div data-field="navigationBar"></div>
+			<div class="page-header">
+				<h1>
+					<span data-i18n-key="Your_tips_page">Your tips page</span><br /> <small> <span data-i18n-key="intro">Hello! Thanks for
+							paying attention to our tweets. You are about to log-in into tips.fuorisalone.it, your personal Fuorisalone advisor. Let us help you,
+							exploring Fuorisalone locations and events.</span></small>
+				</h1>
+				<a data-field="learnMore" href="#learnMore" data-i18n-key="Learn_more">Learn more...</a>
+			</div>
+			<div class="jumbotron">
+				<h2 data-i18n-key="Enter_your_personal...">Enter your personal code received via Twitter DM or log in using Twitter</h2>
+				<div class="row">
+					<div class="col-md-5">
+						<div class="form-group">
+							<label for="code" data-i18n-key="Personal_code">Personal code</label> <input data-field="dashboardCode" type="text"
+								class="form-control" id="code" placeholder="a3182d11-c67e-4cd1-9966-fc89e2984d8d">
+						</div>
+						<button data-field="dashboardSignin" class="btn btn-primary" type="button" data-i18n-key="Sign_in_using_code">Sign in using
+							code</button>
+						<button data-field="twitterSignin" class="btn btn-default" type="button" data-i18n-key="Sign_in_using_Twitter">Sign in using
+							Twitter</button>
+					</div>
+				</div>
+			</div>
+			<div data-field="errorMessageContainer" class="col-md-12 alert alert-danger hide">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				<span data-field="errorMessage" data-i18n-key="User_unknown_error">Sorry, we have not observed any geo-referenced tweets from you
+					about fuorisalone locations and events, yet. Please, tweet about them letting your twitter client to access your position. We will soon
+					invite you. Please, see hereafter what invited users can experience.</span>
+			</div>
+			<div class="row">
+				<div id="learnMore" class="col-md-12">
+					<h3 data-i18n-key="About_Fuorisalone_tips">About Fuorisalone tips</h3>
+					<p>
+						<span data-i18n-key="About_text">TODO: introductory text</span>
+					<p>
+					<p>
+						<span>TODO: Tip example</span>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>-->
+	<script src="../../../../../../webapp//js/jquery-2.1.0.min.js"></script>
+	<!-- Latest compiled and minified JavaScript -->
+	<!-- <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script> -->
+	<script src="../../../../../../webapp//bootstrap-3.1.1-dist/js/bootstrap.js"></script>
+	<!-- Twitter javascript -->
+	<script src="http://platform.twitter.com/widgets.js"></script>
+</body>
+</html>

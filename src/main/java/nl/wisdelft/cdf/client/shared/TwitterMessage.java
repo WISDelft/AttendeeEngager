@@ -5,9 +5,12 @@ package nl.wisdelft.cdf.client.shared;
 
 import java.util.Date;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.validation.constraints.NotNull;
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -26,10 +29,11 @@ public class TwitterMessage {
 	private Long id;
 
 	/**
-	 * Screenname or ID of the Twitter user
+	 * The user to which the message should be sent.
 	 */
-	@NotNull
-	private String user;
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	@JoinColumn(name = "user_ID", nullable = false, updatable = false)
+	private TwitterUser user;
 	/**
 	 * Message to be send to the Twitter user
 	 */
@@ -48,15 +52,41 @@ public class TwitterMessage {
 	 */
 	private Date dateSendAfter;
 	/**
-	 * Indicates whether the message is allowed to be send. Null means not
-	 * determined yet.
-	 */
-	private Boolean allowedToBeSend;
-	/**
 	 * Indicates that the message should be send as a direct message. False means
 	 * send as a tweet mentioning the user.
 	 */
 	private boolean sendAsDirectMessage;
+	/**
+	 * Indicates whether the check if the message is allowed to be send should be
+	 * performed or overridden.
+	 */
+	private boolean overrideAllowedToSendCheck;
+	/**
+	 * If non-null this is the EngagementStatus that should be set for the user
+	 * when this message is successfully send.
+	 */
+	private EngagementStatus userEngagementStatusOnSuccessfulSend = null;
+	/**
+	 * Indicates how many times the message was unsuccessfully sent
+	 */
+	private int retryCount;
+
+	/**
+	 * Required for ORM
+	 */
+	public TwitterMessage() {
+
+	}
+
+	public TwitterMessage(TwitterUser user, String message, boolean sendAsDirectMessage) {
+		this.user = user;
+		this.message = message;
+		this.sendAsDirectMessage = sendAsDirectMessage;
+	}
+
+	public TwitterMessage(TwitterUser user, String message) {
+		this(user, message, false);
+	}
 
 	@PrePersist
 	void createdAt() {
@@ -103,19 +133,11 @@ public class TwitterMessage {
 		this.dateSendAfter = dateSendAfter;
 	}
 
-	public Boolean getAllowedToBeSend() {
-		return allowedToBeSend;
-	}
-
-	public void setAllowedToBeSend(Boolean allowedToBeSend) {
-		this.allowedToBeSend = allowedToBeSend;
-	}
-
-	public String getUser() {
+	public TwitterUser getUser() {
 		return user;
 	}
 
-	public void setUser(String user) {
+	public void setUser(TwitterUser user) {
 		this.user = user;
 	}
 
@@ -125,5 +147,61 @@ public class TwitterMessage {
 
 	public void setSendAsDirectMessage(boolean sendAsDirectMessage) {
 		this.sendAsDirectMessage = sendAsDirectMessage;
+	}
+
+	public boolean isOverrideAllowedToSendCheck() {
+		return overrideAllowedToSendCheck;
+	}
+
+	public void setOverrideAllowedToSendCheck(boolean overrideAllowedToSendCheck) {
+		this.overrideAllowedToSendCheck = overrideAllowedToSendCheck;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		// check for self-comparison
+		if (this == o) return true;
+		// use instanceof instead of getClass here for two reasons
+		// 1. if need be, it can match any supertype, and not just one class;
+		// 2. it renders an explict check for "that == null" redundant, since
+		// it does the check for null already - "null instanceof [type]" always
+		// returns false. (See Effective Java by Joshua Bloch.)
+		if (!(o instanceof TwitterMessage)) return false;
+		// cast to native object is now safe
+		TwitterMessage other = (TwitterMessage) o;
+
+		return this.id > 0 && other.id > 0 && this.id.equals(other.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return this.id == null ? 0 : this.id.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return "TwitterMessage {" + "id:" + id + ", user:" + user + ", message:" + message + ", dateSend:" + dateSend + "}";
+
+	}
+
+	public EngagementStatus getUserEngagementStatusOnSuccessfulSend() {
+		return userEngagementStatusOnSuccessfulSend;
+	}
+
+	public void setUserEngagementStatusOnSuccessfulSend(EngagementStatus userEngagementStatusOnSuccessfulSend) {
+		this.userEngagementStatusOnSuccessfulSend = userEngagementStatusOnSuccessfulSend;
+	}
+
+	public int getRetryCount() {
+		return retryCount;
+	}
+
+	public void setRetryCount(int retryCount) {
+		this.retryCount = retryCount;
+	}
+
+	public int increaseRetryCount() {
+		retryCount++;
+		return retryCount;
 	}
 }

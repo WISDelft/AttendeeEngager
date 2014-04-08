@@ -1,7 +1,7 @@
 /**
  * 
  */
-package nl.wisdelft.cdf.server;
+package nl.wisdelft.cdf.server.status;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -17,4 +17,4 @@ import javax.inject.Qualifier;
 @Qualifier
 @Target({ ElementType.PARAMETER, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Created {}
+public @interface Updated {}

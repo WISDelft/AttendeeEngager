@@ -5,10 +5,9 @@ package nl.wisdelft.cdf.server;
 
 import junit.framework.Assert;
 import nl.wisdelft.cdf.client.shared.TwitterUser;
+import org.junit.Before;
 import org.junit.Test;
-import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
 import twitter4j.User;
 
 /**
@@ -16,50 +15,43 @@ import twitter4j.User;
  * @created Feb 26, 2014
  * @organization Delft University of Technology - Web Information Systems
  */
-public class TestTwitter {
+public class TestTwitter extends BaseTest {
+	@Before
+	public void setup() {
+
+	}
+
 	@Test
 	public void testInitializePropertiesFile() throws TwitterException {
-		Twitter tw = TwitterFactory.getSingleton();
-		System.out.println(tw.getAuthorization());
-		User u = tw.verifyCredentials();
+		User u = twitter.verifyCredentials();
 		Assert.assertNotNull(u);
 		Assert.assertTrue(u.getId() > 0);
 	}
 
 	@Test
 	public void testUserFromTwitterScreenname() throws TwitterException {
-		MessageSender sender = new MessageSender();
-		TwitterUser user = sender.getUserFromTwitter("joosterman", false);
+		TwitterUser user = twitterConnection.getUser("joosterman");
 		Assert.assertNotNull(user);
 		Assert.assertTrue(user.getId() == 158663891L);
 	}
 
 	@Test
 	public void testUserFromTwitterID() throws TwitterException {
-		MessageSender sender = new MessageSender();
-		TwitterUser user = sender.getUserFromTwitter(158663891L, false);
+
+		TwitterUser user = twitterConnection.getUser("158663891");
 		Assert.assertNotNull(user);
 		Assert.assertEquals(user.getScreenName(), "joosterman");
 	}
 
 	@Test
 	public void testUserFromTwitterWrongScreenname() throws TwitterException {
-		MessageSender sender = new MessageSender();
-		TwitterUser user = sender.getUserFromTwitter("joostermanDABOSS", false);
+		TwitterUser user = twitterConnection.getUser("joostermanDABOSS");
 		Assert.assertNull(user);
 	}
 
 	@Test
 	public void testUserFromTwitterWrongID() throws TwitterException {
-		MessageSender sender = new MessageSender();
-		TwitterUser user = sender.getUserFromTwitter(15866389155555L, false);
+		TwitterUser user = twitterConnection.getUser("15866389155555");
 		Assert.assertNull(user);
-	}
-
-	@Test
-	public void testPrepareMessage() throws TwitterException {
-		MessageSender sender = new MessageSender();
-		String message = sender.prepareMessage("joosterman", "test");
-		Assert.assertEquals(message, "@joosterman test");
 	}
 }
