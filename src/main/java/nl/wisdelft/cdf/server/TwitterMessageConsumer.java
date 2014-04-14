@@ -6,6 +6,7 @@ package nl.wisdelft.cdf.server;
 import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
@@ -14,10 +15,8 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
-import javax.jms.MessageListener;
 import javax.jms.Session;
 import javax.jms.TextMessage;
-import javax.persistence.PersistenceException;
 import nl.wisdelft.cdf.client.shared.EngagementStatus;
 import nl.wisdelft.cdf.client.shared.TwitterMessage;
 import nl.wisdelft.cdf.client.shared.TwitterUser;
@@ -34,7 +33,7 @@ import com.google.gson.JsonSyntaxException;
  */
 @Singleton
 @Startup
-public class TwitterMessageConsumer implements MessageListener {
+public class TwitterMessageConsumer {
 	@Inject
 	private Logger logger;
 	@Inject
@@ -43,9 +42,11 @@ public class TwitterMessageConsumer implements MessageListener {
 	private TwitterUserService userService;
 	private Connection connection;
 	private Session session;
-	private MessageConsumer consumer;
+	private MessageConsumer consumerSlow, consumerFast;
 	@Inject
 	private TwitterMessageService messageService;
+	private final String MODULE_ACTIVE = "module_active_messageConsumer";
+	private final String MODULE_ACTIVE_FAST = "module_active_messageConsumerFast";
 
 	@Inject
 	private TwitterConnection twitter;
@@ -58,13 +59,12 @@ public class TwitterMessageConsumer implements MessageListener {
 	@PostConstruct
 	public void initializeAndStart() throws JMSException {
 		// check from the configuration if this module is active
-		if (!utility.getPropertyAsBoolean("module_active_messageConsumer")) {
-			logger.info(TwitterMessageConsumer.class.getSimpleName() + " not started. Disabled in config.");
+		if (!isActiveSlowQueue() && !isActiveFastQueue()) {
+			logger.info(TwitterMessageConsumer.class.getSimpleName() + " not started. Both FAST and SLOW Disabled in config.");
 			return;
 		}
 		logger.info(TwitterMessageConsumer.class.getSimpleName() + " starting...");
 		initialize();
-		start();
 	}
 
 	/**
@@ -81,6 +81,14 @@ public class TwitterMessageConsumer implements MessageListener {
 		logger.info(TwitterMessageConsumer.class.getSimpleName() + " stopped.");
 	}
 
+	private boolean isActiveSlowQueue() {
+		return utility.getPropertyAsBoolean(MODULE_ACTIVE);
+	}
+
+	private boolean isActiveFastQueue() {
+		return utility.getPropertyAsBoolean(MODULE_ACTIVE_FAST);
+	}
+
 	private void initialize() throws JMSException {
 		// Getting JMS connection from the server ConnectionFactory
 		ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(utility.getPropertyAsString("queueConnection"));
@@ -89,26 +97,29 @@ public class TwitterMessageConsumer implements MessageListener {
 		// Creating session for getting messages
 		session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 		// Getting the input queue
-		Destination queueTwitterMessages = session.createQueue(utility.getPropertyAsString("queueTwitterMessages"));
+		Destination queueTwitterMessagesSlow = session.createQueue(utility.getPropertyAsString("queueTwitterMessages"));
+		Destination queueTwitterMessagesFast = session.createQueue(utility.getPropertyAsString("queueTwitterMessagesFast"));
 		// MessageConsumer is used for receiving (consuming) messages
-		consumer = session.createConsumer(queueTwitterMessages);
+		consumerSlow = session.createConsumer(queueTwitterMessagesSlow);
+		consumerFast = session.createConsumer(queueTwitterMessagesFast);
 	}
 
-	public void start() throws JMSException {
-		consumer.setMessageListener(this);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see javax.jms.MessageListener#onMessage(javax.jms.Message)
+	/**
+	 * Slow QUEUE message sending: every 10 minutes
+	 * 
+	 * @throws JMSException
 	 */
-	@Override
-	public void onMessage(Message m) {
-		TwitterMessage twitterMessage = null;
+	@Schedule(hour = "*", minute = "0/10", persistent = false)
+	public void getMessageFromSlowQueueAndSend() throws JMSException {
+		if (!isActiveSlowQueue()) {
+			return;
+		}
+
+		Message m = consumerSlow.receiveNoWait();
 		String json = null;
-		// only process text messages
-		if (m instanceof TextMessage) {
-			logger.info("Recieved a TwitterMessage for sending");
+		TwitterMessage twitterMessage = null;
+		if (m != null && m instanceof TextMessage) {
+			logger.info("SLOW queue: Received a TwitterMessage for sending");
 			try {
 				json = ((TextMessage) m).getText();
 				twitterMessage = gson.fromJson(json, TwitterMessage.class);
@@ -123,12 +134,38 @@ public class TwitterMessageConsumer implements MessageListener {
 				logger.error("ActiveMQ exception on receiving TwitterMessage:", ex);
 			}
 		}
-		else {
-			// stop processing this message and continue
-			logger.warn("Received a non-TextMessage message: " + m);
+	}
 
+	/**
+	 * Fast QUEUE message sending: every 1 minutes
+	 * 
+	 * @throws JMSException
+	 */
+	@Schedule(hour = "*", minute = "0/1", persistent = false)
+	public void getMessageFromFastQueueAndSend() throws JMSException {
+		if (!isActiveFastQueue()) {
+			return;
 		}
 
+		Message m = consumerFast.receiveNoWait();
+		String json = null;
+		TwitterMessage twitterMessage = null;
+		if (m != null && m instanceof TextMessage) {
+			logger.info("FAST queue: Received a TwitterMessage for sending");
+			try {
+				json = ((TextMessage) m).getText();
+				twitterMessage = gson.fromJson(json, TwitterMessage.class);
+				// send the message
+				sendMessage(twitterMessage);
+			}
+			catch (JsonSyntaxException ex) {
+				logger.error("Retrieved message body does not contain a valid serialized TwitterMessage object:\n" + json, ex);
+				// stop processing this message and continue
+			}
+			catch (JMSException ex) {
+				logger.error("ActiveMQ exception on receiving TwitterMessage:", ex);
+			}
+		}
 	}
 
 	/**
@@ -169,7 +206,6 @@ public class TwitterMessageConsumer implements MessageListener {
 	 * @return whether the message was immediately sent.
 	 */
 	protected void sendMessage(TwitterMessage message) {
-		logger.info("Starting sending message to user: " + message);
 		// check if we can send the message
 		if (!isAllowedToBeSend(message)) {
 			// message is not allowed to be send
@@ -185,39 +221,27 @@ public class TwitterMessageConsumer implements MessageListener {
 			handleSuccessfulSend(message);
 		}
 		catch (TwitterException ex) {
-			logger.error("Could not send message via Twitter", ex);
 			handleUnsuccessfulSend(message);
 			// A twitter exception caused the message to not be send. Handle
 			// specific errors
 			boolean requeueMessage = false;
-			int sleepTimeInSeconds = 0;
 			if (ex.exceededRateLimitation()) {
-				logger.warn("Error sending messages: Rate limit.", ex);
+				logger.warn("Error sending message: Rate limit. Requeing.");
 				requeueMessage = true;
-				sleepTimeInSeconds = ex.getRetryAfter();
 			}
-			if (ex.isCausedByNetworkIssue()) {
-				logger.warn("Error sending messages: Network error.", ex);
+			else if (ex.isCausedByNetworkIssue()) {
+				logger.warn("Error sending message: Network error. Requeing.");
 				requeueMessage = true;
-				sleepTimeInSeconds = 30;
+			}
+			else {
+				logger.error("Error sending message: Twitter error. Message lost.", ex);
 			}
 			if (requeueMessage) {
-				// sleep for the specified time
-				try {
-					logger.info("MessageSender sleeping for " + sleepTimeInSeconds + " seconds.");
-					Thread.sleep(sleepTimeInSeconds * 1000);
-				}
-				catch (InterruptedException e) {}
 				// put the message in the queue such that it will be retried for
 				// sending
 				producer.queueMessageForSending(message);
 			}
 		}
-		catch (PersistenceException ex) {
-			logger.warn("Cannot update message/user after successful send. Retrying...", ex);
-			handleSuccessfulSend(message);
-		}
-
 	}
 
 	/**

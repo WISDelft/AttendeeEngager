@@ -3,10 +3,11 @@
  */
 package nl.wisdelft.cdf.client.local;
 
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import nl.wisdelft.cdf.client.local.status.LanguageChanged;
 import org.jboss.errai.ui.client.widget.LocaleSelector;
-import org.jboss.errai.ui.nav.client.local.TransitionAnchor;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -38,8 +39,8 @@ public class NavBar extends Composite {
 	private Logger logger;
 
 	@Inject
-	@DataField
-	private TransitionAnchor<UserDashboard> lnkDashboard;
+	@LanguageChanged
+	Event<UIPreference> languageChanged;
 
 	private UIPreference pref;
 
@@ -53,13 +54,12 @@ public class NavBar extends Composite {
 		if (pref == null) {
 			// create a new UIPreference and persist it
 			pref = new UIPreference();
+			pref.setLocale("en");
 			em.persist(pref);
 		}
 		// if there is a locale specified switch to that locale
-		String locale = pref.getLocale();
-		if (locale != null) {
-			setLocale(locale, false);
-		}
+		setLocale(pref.getLocale(), false);
+
 		// set the right button to active
 		updateLanguageButtons();
 	}
@@ -77,7 +77,6 @@ public class NavBar extends Composite {
 	}
 
 	protected void setLocale(String locale, boolean storeAsDefault) {
-		// if ("en".equals(locale)) locale = LocaleSelector.DEFAULT;
 		selector.select(locale);
 		logger.info("Language set to: " + locale);
 		if (storeAsDefault) {
@@ -85,6 +84,9 @@ public class NavBar extends Composite {
 			pref = em.merge(pref);
 			em.flush();
 		}
+
+		// notify component of the changes
+		languageChanged.fire(pref);
 	}
 
 	/**

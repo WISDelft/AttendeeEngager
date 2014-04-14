@@ -15,13 +15,14 @@
 	"UserDashboard.Personal_info" : "Personal info",
 	"UserDashboard.Screenname" : "Screenname",
 	"UserDashboard.Current_status" : "Current status",
-	"UserDashboard.Communication_preference" :"Communication preference",
+	"UserDashboard.Communication_preference" :"Language of tweets",
 	"UserDashboard.Following" : "Following",
 	"UserDashboard.Recommendations_received" :"Recommendations received",
 	"UserDashboard.Opt-out" :"Opt-out",
 	"UserDashboard.Personalized_tips" : "Personalized tips",
 	"UserDashboard.Visit_site" : "Visit site",
 	"UserDashboard.for" : "for",
+	"UserDashboard.NoRecommendations": "You have no tips at this moment. Please check back later. If you are following our Twitter account we will also send you these tips via DM.",
 	"LandingPage.Your_tips_page" : "Your tips page",
 	"LandingPage.intro" : "Hello! Thanks for paying attention to our tweets. You are about to log-in into tips.fuorisalone.it, your personal Fuorisalone advisor. Let us help you, exploring Fuorisalone locations and events.",
 	"LandingPage.Learn_more" : "learn more...",
@@ -30,6 +31,5 @@
 	"LandingPage.Sign_in_using_code": "Sign in using code",
 	"LandingPage.Sign_in_using_Twitter" :"Sign in using Twitter",
 	"LandingPage.User_unknown_error" : "Sorry, we have not observed any geo-referenced tweets from you about fuorisalone locations and events, yet. Please, tweet about them letting your twitter client to access your position. We will soon invite you. Please, see hereafter what invited users can experience.",
-	"LandingPage.About_Fuorisalone_tips" :"About Fuorisalone tips",
-	"LandingPage.About_text" :"TODO: about text"
+	"LandingPage.About_Fuorisalone_tips" :"About Fuorisalone tips"
 }

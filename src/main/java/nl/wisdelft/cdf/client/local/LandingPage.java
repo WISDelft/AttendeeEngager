@@ -3,8 +3,9 @@
  */
 package nl.wisdelft.cdf.client.local;
 
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import org.jboss.errai.ui.client.local.spi.TranslationService;
+import nl.wisdelft.cdf.client.local.status.LanguageChanged;
 import org.jboss.errai.ui.nav.client.local.DefaultPage;
 import org.jboss.errai.ui.nav.client.local.Page;
 import org.jboss.errai.ui.nav.client.local.PageShowing;
@@ -47,14 +48,20 @@ public class LandingPage extends Composite {
 	TextBox dashboardCode;
 
 	@Inject
-	private TranslationService translate;
-
-	@Inject
 	TransitionTo<UserDashboard> gotoDashboard;
+
+	@DataField
+	Element aboutEN = DOM.createDiv();
+
+	@DataField
+	Element aboutIT = DOM.createDiv();
 
 	@Inject
 	@DataField
-	Anchor learnMore;
+	Anchor learnMoreLink;
+
+	@DataField
+	Element learnMore = DOM.createDiv();
 
 	@Inject
 	@DataField
@@ -101,5 +108,22 @@ public class LandingPage extends Composite {
 		home = home.substring(0, home.lastIndexOf("/"));
 		String redirectTo = home + "/twittersignin";
 		Window.Location.replace(redirectTo);
+	}
+
+	/**
+	 * Update the about box on language change
+	 * 
+	 * @param lang
+	 */
+	public void languageChanged(@Observes @LanguageChanged UIPreference pref) {
+		String lang = pref.getLocale();
+		if ("en".equals(lang)) {
+			aboutEN.removeClassName("hide");
+			aboutIT.addClassName("hide");
+		}
+		else {
+			aboutEN.addClassName("hide");
+			aboutIT.removeClassName("hide");
+		}
 	}
 }

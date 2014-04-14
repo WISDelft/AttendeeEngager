@@ -79,6 +79,7 @@ public class TwitterUserEndpointImpl implements TwitterUserEndpoint {
 			return Response.ok(user).build();
 		}
 		else {
+			logger.warn("User requested but not found: " + id);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 	}
@@ -90,6 +91,7 @@ public class TwitterUserEndpointImpl implements TwitterUserEndpoint {
 			return Response.ok(user).build();
 		}
 		else {
+			logger.warn("User requested but not found: " + dashboardPath);
 			return Response.status(Status.NOT_FOUND).build();
 		}
 	}
@@ -150,6 +152,19 @@ public class TwitterUserEndpointImpl implements TwitterUserEndpoint {
 		Recommendation rec = recommendationService.getById(recId);
 		if (rec != null && rec.getUserID() == id) {
 			recommendationService.update(recId, entity);
+			return Response.ok().build();
+		}
+		else {
+			return Response.status(Status.NOT_FOUND).build();
+		}
+	}
+
+	@Override
+	public Response dashboardVisited(Long id) {
+		TwitterUser user = userService.getById(id);
+		if (user != null) {
+			user.incDashboardVisited();
+			userService.update(id, user);
 			return Response.ok().build();
 		}
 		else {

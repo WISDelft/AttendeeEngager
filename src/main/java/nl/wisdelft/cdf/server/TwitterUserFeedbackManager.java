@@ -73,7 +73,7 @@ public class TwitterUserFeedbackManager {
 		logger.info(TwitterUserFeedbackManager.class.getSimpleName() + " stopped.");
 	}
 
-	@Schedule(persistent = false, hour = "*", minute = "0/2")
+	@Schedule(persistent = false, hour = "*", minute = "0/5")
 	@Asynchronous
 	public void getFeedback() {
 		if (!utility.getPropertyAsBoolean("module_active_processTwitterUserFeedback")) {
@@ -106,8 +106,9 @@ public class TwitterUserFeedbackManager {
 	public void checkFollowers() {
 		// Get all the followers
 		List<Long> followers = twitter.getFollowers();
-		// null indicates the followers could not be retrieved from Twitter.
-		if (followers == null) {
+		// null or size==0 indicates the followers could not be retrieved from
+		// Twitter.
+		if (followers == null || followers.size() == 0) {
 			return;
 		}
 
@@ -118,8 +119,8 @@ public class TwitterUserFeedbackManager {
 		for (TwitterUser user : currentUsers) {
 			// The user is currently following us
 			if (followerSet.contains(user.getId())) {
-				// but the user was not yet following us
-				if (!user.isFollower()) {
+				// but the user was not yet following us and he did not OPT_OUT
+				if (!user.isFollower() && !(user.getEngagementStatus() == EngagementStatus.OPTED_OUT)) {
 					// Update the status and fire the event.
 					user.setFollower(true);
 					user.setEngagementStatus(EngagementStatus.OPTED_IN);

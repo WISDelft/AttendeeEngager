@@ -5,8 +5,10 @@ package nl.wisdelft.cdf.server;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.ejb.Timer;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.jms.Connection;
@@ -62,9 +64,24 @@ public class NewUserConsumer implements MessageListener {
 			return;
 		}
 		logger.info(NewUserConsumer.class.getSimpleName() + " starting...");
-		initialize();
-		start();
 
+	}
+
+	/**
+	 * Starts listening to messages only when the whole thing is deployed and
+	 * constructed
+	 * 
+	 * @param timer
+	 * @throws JMSException
+	 */
+	@Schedule(hour = "*", minute = "*", persistent = false)
+	protected void init(Timer timer) throws JMSException {
+		if (utility.getPropertyAsBoolean("module_active_processIncomingUsers")) {
+			initialize();
+			start();
+		}
+
+		timer.cancel();
 	}
 
 	/**

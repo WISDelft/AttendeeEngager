@@ -193,7 +193,7 @@ public class Utility {
 		user.setLocation(u.getLocation());
 		user.setProtectedAccount(u.isProtected());
 		user.setScreenName(u.getScreenName());
-		user.setURL(u.getURL());
+		user.setUrl(u.getURL());
 		return user;
 	}
 }

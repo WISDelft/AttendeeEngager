@@ -7,7 +7,8 @@
 <title>AttendeeEngager</title>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="../../../../../../webapp/bootstrap-3.1.1-dist/css/bootstrap.css" />
-<link rel="stylesheet" href="http://web.studiolabo.it/test/fs14/tips.css" />
+<!-- <link rel="stylesheet" href="http://web.studiolabo.it/test/fs14/tips.css" /> -->
+<link rel="stylesheet" href="http://citysensing.fuorisalone.it/webfont/fonts.css" />
 <link rel="stylesheet" href="../../../../../../webapp/css/application.css" />
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -17,52 +18,39 @@
     <![endif]-->
 </head>
 <body>
+	<div class="blackBarTop"></div>
+	<div class="fuoriosaloneBar">
+		<div class="center">
+			<a href="http://fuorisalone.it/2014/" class="mainlogo" title="Fuorisalone.it">
+				<img src="http://fuorisalone.it/2014/img/logo.png" alt="Fuorisalone.it . Milano Design Week . 8-13 Aprile 2014"><br /> <span
+					class="milanodesignweek">MILANO DESIGN WEEK 8-13 APRILE 2014</span>
+			</a>
+		</div>
+	</div>
+	<div class="tipsBar">
+		<div class="center">
+			<span>Fuorisalone Tips</span>
+		</div>
+	</div>
 	<div class="container">
-		<!-- Static navbar -->
-		<div class="navbar navbar-default" role="navigation" data-role="dummy">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-						<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="#">Fuorisalone Tips</a>
-				</div>
-				<div class="navbar-collapse collapse">
-					<ul class="nav navbar-nav">
-						<li class="active"><a href="#" data-i18n-key="dashboard">Dashboard</a></li>
-						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<span data-i18n-key="tasks=">Tasks</span> <b class="caret"></b>
-							</a>
-							<ul class="dropdown-menu">
-								<li class="dropdown-header">Image tagging</li>
-								<li><a href="#">B&B Italia</a></li>
-								<li><a href="#">Bisazza</a></li>
-							</ul></li>
-					</ul>
-					<ul class="nav navbar-nav navbar-right">
-						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								Language <b class="caret"></b>
-							</a>
-							<ul class="dropdown-menu">
-								<li class="active"><a href="#">English</a></li>
-								<li><a href="#" class="disabled">Italian</a></li>
-							</ul></li>
-					</ul>
-				</div>
-				<!--/.nav-collapse -->
-			</div>
-			<!--/.container-fluid -->
+		<div data-field="navigation-template" class="btn-group pull-right navigationBar">
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-i18n-key="Language">
+				Language <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu" role="menu">
+				<li><a id="english" href="#" lang="en" data-i18n-key="English">English</a></li>
+				<li><a id="italian" href="#" lang="it" data-i18n-key="Italian">Italian</a></li>
+			</ul>
 		</div>
 		<!-- /.navbar -->
-		<div class="app-template">
+		<div data-field="app-template" class="center">
 			<div data-field="navigationBar"></div>
 			<div class="page-header">
 				<h1>
-					<span data-i18n-key="Your_tips_page">Your tips page</span><br /> <small> <span data-i18n-key="intro">Hello! Thanks for
-							paying attention to our tweets. You are about to log-in into tips.fuorisalone.it, your personal Fuorisalone advisor. Let us help you,
-							exploring Fuorisalone locations and events.</span></small>
+					<small> <span data-i18n-key="intro">Hello! Thanks for paying attention to our tweets. You are about to log-in into
+							tips.fuorisalone.it, your personal Fuorisalone advisor. Let us help you, exploring Fuorisalone locations and events.</span></small>
 				</h1>
-				<a data-field="learnMore" href="#learnMore" data-i18n-key="Learn_more">Learn more...</a>
+				<a data-field="learnMoreLink" href="#learnMore" data-i18n-key="Learn_more">Learn more...</a>
 			</div>
 			<div class="jumbotron">
 				<h2 data-i18n-key="Enter_your_personal...">Enter your personal code received via Twitter DM or log in using Twitter</h2>
@@ -86,14 +74,134 @@
 					invite you. Please, see hereafter what invited users can experience.</span>
 			</div>
 			<div class="row">
-				<div id="learnMore" class="col-md-12">
+				<div id="learnMore" data-field="learnMore">
 					<h3 data-i18n-key="About_Fuorisalone_tips">About Fuorisalone tips</h3>
-					<p>
-						<span data-i18n-key="About_text">TODO: introductory text</span>
-					<p>
-					<p>
-						<span>TODO: Tip example</span>
-					</p>
+					<div data-field="aboutEN" class="">
+						<div class="">
+							<p>The digital footprints left by people on social media represent an increasingly accurate and up­to­date representation of
+								reality. The widespread availability of smartphones allows location­based social networks to scale up geographically and temporally
+								bounded events to a broader audience, offering a window on the interests, habits, and preferences of people. This network of people,
+								places, and topics is constantly reshaping; to master its complexity to the point of being able to predict new connections requires
+								a novel class of systems, capable of handling in real­time high volumes of information, which might span a variety of topics and
+								places, and extracting useful knowledge.</p>
+							<p>
+								The City Data Fusion for Event Management project (funded by the
+								<a href="http://www.eitictlabs.eu/innovation-areas/urban-life-and-mobility/">Urban Life and Mobility Action Line</a>
+								of
+								<a href="http://www.eitictlabs.eu">EIT ICT Lab</a>
+								) together with
+								<a href="http://fuorisalone.it/">Fuorisalone.it</a>
+								brings to Milano Design Week 2014
+								<a href="http://tips.fuorisalone.it">Fuorisalone Tips</a>
+								— a personalized and location-based recommendation engine for furisalone locations and events. The systems listens to geo-referenced
+								tweets posted from Milano area, links them to Fuorisalone 2014 locations and events, profiles those who tweeted about Fuorisalone
+								2014 and suggests for them locations and events.
+							</p>
+							<img src="./images/tips_example.png" /><br /> <small>Example of tips that will be sent</small>
+						</div>
+						<div class="footer col-md-12">
+							<div class="col-md-3">
+								<h3>Research partners</h3>
+								<ul class="nobullet">
+									<li><a href="http://www.deib.polimi.it/">Politecnico di Milano</a>
+										<ul>
+											<li><a href="http://www.balduini.org/">Marco Balduini</a></li>
+											<li><a href="http://emanueledellavalle.org/">Emanuele Della Valle</a></li>
+										</ul></li>
+									<li><a href="http://www.siemens.com/">SIEMENS</a>
+										<ul>
+											<li><a href="http://www.dbs.ifi.lmu.de/~huang/">Yi Huang</a></li>
+										</ul></li>
+									<li><a href="http://wis.ewi.tudelft.nl">Delft University of Technology</a>
+										<ul>
+											<li><a href="http://www.wis.ewi.tudelft.nl/bocconi">Stefano Bocconi</a></li>
+											<li><a href="http://www.wis.ewi.tudelft.nl/bozzon">Alessandro Bozzon</a></li>
+											<li><a href="http://www.wis.ewi.tudelft.nl/oosterman/">Jasper Oosterman</a></li>
+										</ul></li>
+								</ul>
+							</div>
+							<div class="col-md-3">
+								<h3>Acknowledgements</h3>
+								<p>
+									This research is based on
+									<a href="http://streamreasoning.org/">Stream Reasoning</a>
+									results. It was partially funded by Emanuele Della Valle's IBM award 2013, by the EIT ICT Labs' activities 2013 and 2014 of the
+									City Data Fusion program and by the Dutch national program COMMIT.
+								</p>
+							</div>
+							<div class="col-md-4">
+								<img src="http://fuorisalone2014.breradesigndistrict.it/static/img/brera-design-district-logo1.png" alt="Logo Brera Design Distric"
+									style="margin: 5px; width: 100px;" /> <img src="http://www.medinfopoli.polimi.it/images/Logo_DEIB.jpg" alt="Logo Polimi"
+									style="margin: 5px; width: 100px;" /> <img src="http://care-innovation.eu/wp-content/uploads/2014/01/EIT-ICT-Labs-Logo.jpg"
+									alt="Logo EIT ICT" style="margin: 5px; width: 100px;" /> <img src="http://www.wis.ewi.tudelft.nl/fileadmin/wis/images/TUDLogo.png"
+									alt="Logo TUDELFT" style="margin: 5px; width: 200px;" /><img src="./images/siemens.bmp"
+									alt="Logo Siemens" style="margin: 5px; width: 200px;" />
+							</div>
+						</div>
+					</div>
+					<div data-field="aboutIT" class="hide">
+						<div class="">
+							<p>Le impronte che lasciamo sui social media permettono di ottenere in maniera sempre più accurata e aggiornata una
+								rappresentazione del mondo reale. La diffusione degli smart phones permette ai social network di diffondere informazioni su eventi
+								ben oltre i limiti spazio-temporali in cui questi eventi avvengono. Inoltre, questi social network offrono una finestra sugli
+								interessi, le abitudini e le preferenze di chi partecipa a questi eventi. Questa rete di persone, luoghi e argomenti è in costante
+								evoluzione; prevedere come tale rete evolve modificando le sue connessioni richiede un sistema capace di esaminare in tempo reale un
+								alto volume di dati, riguardanti una varietà di argomenti e posti, ed estrarre da questi informazioni utili.</p>
+							<p>
+								Il progetto City Data Fusion for Event Management (finanziato dal
+								<a href="http://www.eitictlabs.eu/innovation-areas/urban-life-and-mobility/">Urban Life and Mobility Action Line</a>
+								) del
+								<a href="http://www.eitictlabs.eu">EIT ICT Lab</a>
+								), insieme a
+								<a href="http://fuorisalone.it/">Fuorisalone.it</a>
+								offre durante la Milano Design Week 2014
+								<a href="http://tips.fuorisalone.it">Fuorisalone Tips</a>
+								, un servizio di suggerimenti personalizzati per gli eventi di Fuorisalone. Questo servizio esamina i tweets geo-localizzati
+								effettuati nell'area di Milano e stabilisce se riguardano gli eventi di Fuorisalone 2014. Nel caso positivo, crea un profilo
+								dell'utente che ha scritto il tweet da usare per suggerire eventi potenzialmente interessanti per quell'utente.
+							</p>
+							<img src="./images/tips_example.png" /><br /> <small>Esempio di suggerimenti che saranno inviati</small>
+						</div>
+						<div class="footer col-md-12">
+							<div class="col-md-3">
+								<h3>Partners</h3>
+								<ul class="nobullet">
+									<li><a href="http://www.deib.polimi.it/">Politecnico di Milano</a>
+										<ul>
+											<li><a href="http://www.balduini.org/">Marco Balduini</a></li>
+											<li><a href="http://emanueledellavalle.org/">Emanuele Della Valle</a></li>
+										</ul></li>
+									<li><a href="">SIEMENS</a>
+										<ul>
+											<li><a href="">Yi Huang</a></li>
+										</ul></li>
+									<li><a href="http://wis.ewi.tudelft.nl">Delft University of Technology</a>
+										<ul>
+											<li><a href="http://www.wis.ewi.tudelft.nl/bocconi/">Stefano Bocconi</a></li>
+											<li><a href="http://www.wis.ewi.tudelft.nl/bozzon/">Alessandro Bozzon</a></li>
+											<li><a href="http://www.wis.ewi.tudelft.nl/oosterman/">Jasper Oosterman</a></li>
+										</ul></li>
+								</ul>
+							</div>
+							<div class="col-md-3">
+								<h3>Ringraziamenti</h3>
+								<p>
+									La ricerca effettuata in questo progetto si basa sui risultati di
+									<a href="http://streamreasoning.org/">Stream Reasoning</a>
+									. Il progetto è parzialmente finanziato dall'IBM award 2013 ottenuto da Emanuele Della Valle, dalle attività 2013 e 2014 del
+									programma City Data Fusion di EIT ICT Labs e dal programma nazionale olandese COMMIT.
+								</p>
+							</div>
+							<div class="col-md-4">
+								<img src="http://fuorisalone2014.breradesigndistrict.it/static/img/brera-design-district-logo1.png" alt="Logo Brera Design Distric"
+									style="margin: 5px; width: 100px;" /> <img src="http://www.medinfopoli.polimi.it/images/Logo_DEIB.jpg" alt="Logo Polimi"
+									style="margin: 5px; width: 100px;" /> <img src="http://care-innovation.eu/wp-content/uploads/2014/01/EIT-ICT-Labs-Logo.jpg"
+									alt="Logo EIT ICT" style="margin: 5px; width: 100px;" /> <img src="http://www.wis.ewi.tudelft.nl/fileadmin/wis/images/TUDLogo.png"
+									alt="Logo TUDELFT" style="margin: 5px; width: 200px;" /><img src="./images/siemens.bmp"
+									alt="Logo Siemens" style="margin: 5px; width: 200px;" />
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

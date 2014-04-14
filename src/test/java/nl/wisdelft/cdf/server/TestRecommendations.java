@@ -39,7 +39,7 @@ public class TestRecommendations extends BaseTest {
 		Date from = null;
 		from = blackboardDateFormat.parse("2013-03-19T00:00:00+0200");
 
-		Map<Long, List<Recommendation>> recs = manager.getRecommendations(from, to);
+		Map<Long, List<Recommendation>> recs = manager.getRecommendationsFromDB(from, to);
 		Assert.assertNotNull(recs);
 		Assert.assertTrue(recs.size() > 0);
 	}

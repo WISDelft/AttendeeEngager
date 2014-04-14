@@ -56,6 +56,10 @@ public interface TwitterUserEndpoint {
 	public Response updateStatus(@PathParam("id") Long id, @PathParam("status") String status);
 
 	@PUT
+	@Path("/{id:[0-9][0-9]*}/dashboard/visited/")
+	public Response dashboardVisited(@PathParam("id") Long id);
+
+	@PUT
 	@Path("/{id:[0-9][0-9]*}/locale/{locale}")
 	public Response updateCommunicationLocale(@PathParam("id") Long id, @PathParam("locale") String locale);
 

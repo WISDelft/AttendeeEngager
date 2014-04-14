@@ -45,6 +45,8 @@ public class TwitterUser {
 	private String langPreference;
 	private String accessToken;
 	private String accessTokenSecret;
+	private int dashboardVisited;
+	private Date lastDashboardVisit;
 
 	/**
 	 * Date when we got the user information from Twitter
@@ -135,14 +137,6 @@ public class TwitterUser {
 		this.description = description;
 	}
 
-	public String getURL() {
-		return url;
-	}
-
-	public void setURL(String uRL) {
-		url = uRL;
-	}
-
 	public int getFollowerCount() {
 		return followerCount;
 	}
@@ -227,4 +221,37 @@ public class TwitterUser {
 	public void setLangPreference(String langPreference) {
 		this.langPreference = langPreference;
 	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public int getDashboardVisited() {
+		return dashboardVisited;
+	}
+
+	public void setDashboardVisited(int dashboardVisited) {
+		this.dashboardVisited = dashboardVisited;
+	}
+
+	/**
+	 * Increases the dashboardVisit count and set the lastdahsboardvisit to NOW.
+	 */
+	public void incDashboardVisited() {
+		this.dashboardVisited++;
+		this.lastDashboardVisit = new Date();
+	}
+
+	public Date getLastDashboardVisit() {
+		return lastDashboardVisit;
+	}
+
+	public void setLastDashboardVisit(Date lastDashboardVisit) {
+		this.lastDashboardVisit = lastDashboardVisit;
+	}
+
 }

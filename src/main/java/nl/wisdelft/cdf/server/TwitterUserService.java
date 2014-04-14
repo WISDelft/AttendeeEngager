@@ -107,7 +107,7 @@ public class TwitterUserService {
 		}
 		else {
 			// user exists, return the DB version
-			logger.warn("User already in DB: " + name);
+			logger.warn("User already exists in DB: " + name);
 			return null;
 		}
 	}

@@ -226,7 +226,7 @@
         </executions>
         <configuration>
           <extraJvmArgs>-Xmx712m -XX:CompileThreshold=7000 -XX:MaxPermSize=1024M -Derrai.jboss.home=${errai.jboss.home} -Derrai.dev.context=${errai.dev.context} -Derrai.jboss.javaagent.path=${settings.localRepository}/org/jboss/errai/errai-client-local-class-hider/${errai.version}/errai-client-local-class-hider-${errai.version}.jar</extraJvmArgs>
-          <logLevel>WARN</logLevel>
+          <logLevel>INFO</logLevel>
           <draftCompile>true</draftCompile>
           <disableAggressiveOptimization>true</disableAggressiveOptimization>
           <optimizationLevel>0</optimizationLevel>

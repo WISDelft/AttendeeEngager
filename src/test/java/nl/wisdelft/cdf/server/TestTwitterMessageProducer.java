@@ -31,7 +31,7 @@ public class TestTwitterMessageProducer extends BaseTest {
 		producer.utility = utility;
 		producer.initialize();
 		// mock the actual sending of messages to the queue
-		producer.producer = Mockito.mock(MessageProducer.class);
+		producer.producerSlow = Mockito.mock(MessageProducer.class);
 		// Mock the the storing of messages in the DB
 		producer.messageService = Mockito.mock(TwitterMessageService.class);
 
@@ -46,7 +46,7 @@ public class TestTwitterMessageProducer extends BaseTest {
 	public void testActiveMQ() {
 		Assert.assertNotNull(producer.connection);
 		Assert.assertNotNull(producer.session);
-		Assert.assertNotNull(producer.producer);
+		Assert.assertNotNull(producer.producerSlow);
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class TestTwitterMessageProducer extends BaseTest {
 		testClosedConnection();
 		producer.initialize();
 		// again mock out the actual putting of the message in the queue
-		producer.producer = Mockito.mock(MessageProducer.class);
+		producer.producerSlow = Mockito.mock(MessageProducer.class);
 		Assert.assertFalse(producer.localMessageQueue.isEmpty());
 		producer.queueMessageForSending(new TwitterMessage());
 		Assert.assertTrue(producer.localMessageQueue.isEmpty());

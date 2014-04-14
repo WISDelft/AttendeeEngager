@@ -5,6 +5,7 @@ package nl.wisdelft.cdf.server;
 
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -24,6 +25,7 @@ import nl.wisdelft.cdf.client.shared.Recommendation;
 import nl.wisdelft.cdf.client.shared.TwitterMessage;
 import nl.wisdelft.cdf.client.shared.TwitterUser;
 import nl.wisdelft.cdf.client.shared.Venue;
+import nl.wisdelft.cdf.client.shared.VenueEvent;
 import nl.wisdelft.cdf.server.status.Created;
 import nl.wisdelft.cdf.server.status.Engaged;
 import nl.wisdelft.cdf.server.status.NotResponded;
@@ -64,7 +66,7 @@ public class TwitterMessageProducer {
 
 	protected Connection connection;
 	protected Session session;
-	protected MessageProducer producer;
+	protected MessageProducer producerSlow, producerFast;
 
 	private final String MODULE_ACTIVE = "module_active_messagesProducer";
 
@@ -93,10 +95,13 @@ public class TwitterMessageProducer {
 		// Creating session for getting messages
 		session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 		// Getting the input queue
-		Destination queueTwitterMessages = session.createQueue(utility.getPropertyAsString("queueTwitterMessages"));
+		Destination queueTwitterMessagesSlow = session.createQueue(utility.getPropertyAsString("queueTwitterMessages"));
+		Destination queueTwitterMessagesFast = session.createQueue(utility.getPropertyAsString("queueTwitterMessagesFast"));
 		// MessageConsumer is used for receiving (consuming) messages
-		producer = session.createProducer(queueTwitterMessages);
-		producer.setDeliveryMode(DeliveryMode.PERSISTENT);
+		producerSlow = session.createProducer(queueTwitterMessagesSlow);
+		producerSlow.setDeliveryMode(DeliveryMode.PERSISTENT);
+		producerFast = session.createProducer(queueTwitterMessagesFast);
+		producerFast.setDeliveryMode(DeliveryMode.PERSISTENT);
 		logger.info(TwitterMessageProducer.class.getSimpleName() + " starting...");
 	}
 
@@ -137,7 +142,13 @@ public class TwitterMessageProducer {
 			TwitterMessage textMessage;
 			while ((textMessage = localMessageQueue.peek()) != null) {
 				String json = gson.toJson(textMessage);
-				producer.send(session.createTextMessage(json));
+				// DMs go into the fast queue, status updates in the slow queue
+				if (textMessage.isSendAsDirectMessage()) {
+					producerFast.send(session.createTextMessage(json));
+				}
+				else {
+					producerSlow.send(session.createTextMessage(json));
+				}
 				// successfully added, remove from local queue
 				localMessageQueue.poll();
 			}
@@ -163,7 +174,8 @@ public class TwitterMessageProducer {
 			// get the number of possible messages
 			int nrMessages = utility.getPropertyAsInt("nrDifferentMessages");
 			// messagenumber is the postfix for the message
-			int messageNumber = (int) Math.round((nrMessages * Math.random()));
+			int messageNumber = (int) Math.ceil((nrMessages * Math.random()));
+			if (messageNumber == 0) messageNumber = 1;
 			String messagePropertyname = "welcomeMessage_" + messageNumber;
 
 			// create unique dashboard url
@@ -193,12 +205,21 @@ public class TwitterMessageProducer {
 		if (!isActive()) {
 			return;
 		}
+		if (true) {
+			logger.info("Non-responding User observed. However we do not send a reminder for due to message limits and set it's status to CONTACTED_REMINDED:"
+					+ notRespondedUser);
+			notRespondedUser.setEngagementStatus(EngagementStatus.CONTACTED_REMINDED);
+			userService.update(notRespondedUser.getId(), notRespondedUser);
+			return;
+		}
+
 		logger.info("Non-responding User observed: " + notRespondedUser);
 		if (notRespondedUser.getEngagementStatus() == EngagementStatus.CONTACTED) {
 			// get the number of possible messages
 			int nrMessages = utility.getPropertyAsInt("nrDifferentMessages");
 			// messagenumber is the postfix for the message
-			int messageNumber = (int) Math.round((nrMessages * Math.random()));
+			int messageNumber = (int) Math.ceil((nrMessages * Math.random()));
+			if (messageNumber == 0) messageNumber = 1;
 			String messagePropertyname = "reminderMessage_" + messageNumber;
 
 			// create unique dashboard url
@@ -276,10 +297,30 @@ public class TwitterMessageProducer {
 		// prepare the message
 		String template = utility.getPropertyAsString("recommendationDM", user.getLangPreference());
 		Venue venue = recManager.getVenue(recommendation.getVenueID());
-		String address = venue == null ? "" : venue.getAddress();
-		String name = venue == null ? "" : venue.getName();
+		// get the events
+		List<VenueEvent> events = recommendation.getEvents();
+		VenueEvent event = null;
+		// if possible select a random one
+		if (events != null && !events.isEmpty()) {
+			int index = (int) Math.floor(Math.random() * events.size());
+			if (index == events.size()) index--;
+			event = events.get(index);
+		}
 
-		String recommendationMessage = String.format(template, name, address);
+		String eventName = event == null ? "" : event.getName();
+		String venueName = venue == null ? "" : venue.getName();
+		String address = venue == null ? "" : venue.getAddress();
+
+		String recommendationMessage = String.format(template, eventName, venueName);
+		// if this is too long, trim the message with ...
+		if (recommendationMessage.length() > 140) {
+			recommendationMessage = recommendationMessage.substring(0, 136) + "...";
+		}
+		// check if the address within brackets (address) can be added
+		if ((recommendationMessage.length() + address.length() + 3) <= 140) {
+			recommendationMessage += " (" + address + ")";
+		}
+
 		// prepare the message object
 		TwitterMessage message = new TwitterMessage(recommendation.getUser(), recommendationMessage, true);
 		// persist the message

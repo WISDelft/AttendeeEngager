@@ -62,6 +62,9 @@ public class UserDashboard extends Composite {
 	@DataField
 	Element recommendationQuestionBig = DOM.createDiv();
 
+	@DataField
+	Element noRecommendationMessage = DOM.createDiv();
+
 	@Inject
 	@DataField
 	NavBar navigationBar;
@@ -106,6 +109,10 @@ public class UserDashboard extends Composite {
 					twitterUser = MarshallingWrapper.fromJSON(response.getText(), TwitterUser.class);
 					updateUserInformation();
 					getRecommendations();
+					// twitter user as retrieved succesfully, update the dashboard visited
+					// count
+					dashboardVisited();
+
 				}
 				else {
 					Multimap<String, String> params = HashMultimap.create();
@@ -115,6 +122,15 @@ public class UserDashboard extends Composite {
 			}
 		}).getByDashboardPath(user);
 
+	}
+
+	public void dashboardVisited() {
+		endpoint.call(new ResponseCallback() {
+			@Override
+			public void callback(Response response) {
+				logger.info("Dashboard visited updated");
+			}
+		}).dashboardVisited(twitterUser.getId());
 	}
 
 	/**
@@ -179,7 +195,12 @@ public class UserDashboard extends Composite {
 			status.setText("Not chosen yet");
 		}
 		// only show the big box on top if we are not opted in
-		toggle("recommendationQuestionBig", es != EngagementStatus.OPTED_IN);
+		if (es != EngagementStatus.OPTED_IN) {
+			recommendationQuestionBig.removeClassName("hide");
+		}
+		else {
+			recommendationQuestionBig.addClassName("hide");
+		}
 		// only show the big opt-out button is we are not opted-out
 		optoutBig.setVisible(es != EngagementStatus.OPTED_OUT);
 		// show the small opt-out button only when we are opted in
@@ -188,11 +209,6 @@ public class UserDashboard extends Composite {
 		updateCommunicationButtonStatus();
 	}
 
-	public native void toggle(String elementClass, boolean show)
-	/*-{
-		$wnd.jQuery("."+elementClass).toggle(show);
-	}-*/;
-
 	public void getRecommendations() {
 		logger.info("Getting recommendations");
 		endpoint.call(new RemoteCallback<List<Recommendation>>() {
@@ -200,10 +216,18 @@ public class UserDashboard extends Composite {
 			@Override
 			public void callback(List<Recommendation> recommendations) {
 				logger.info("Received " + recommendations.size() + " recommendations");
-				createRecommendationList(recommendations);
 				receivedRecommendations.setText(Integer.toString(recommendations.size()));
-				// show the list with the right content
-				recommendationList.setVisible(true);
+
+				if (recommendations.size() == 0) {
+					noRecommendationMessage.removeClassName("hide");
+					recommendationList.setVisible(false);
+				}
+				else {
+					noRecommendationMessage.addClassName("hide");
+					createRecommendationList(recommendations);
+					// show the list with the right content
+					recommendationList.setVisible(true);
+				}
 			}
 		}).getAllRecommendations(twitterUser.getId());
 	}

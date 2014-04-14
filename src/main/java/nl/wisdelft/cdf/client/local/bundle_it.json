@@ -15,13 +15,14 @@
 	"UserDashboard.Personal_info" : "Informazioni personali",
 	"UserDashboard.Screenname" : "Screenname",
 	"UserDashboard.Current_status" : "Stato attuale",
-	"UserDashboard.Communication_preference" :"Preferenze di comunicazione",
+	"UserDashboard.Communication_preference" :"Lingua dei tweets",
 	"UserDashboard.Following" : "Following",
 	"UserDashboard.Recommendations_received" :"Hai ricevuto suggerimenti",
 	"UserDashboard.Opt-out" :"Opt-out",
 	"UserDashboard.Personalized_tips" : "Suggerimenti Personalizzati",
 	"UserDashboard.Visit_site" : "Visita il sito",
 	"UserDashboard.for" : "per",
+	"UserDashboard.NoRecommendations": "Al momento non ci sono ancora suggerimenti per te. Ti preghiamo di visitare questa pagina più tardi. Se ci segui su Twitter ti manderemo i suggerimenti anche in messaggi diretti.",
 	"LandingPage.Your_tips_page" : "La tua pagina di suggerimenti",
 	"LandingPage.intro" : "Ciao! Grazie per aver prestato attenzione al nostro tweets. Ti stai per registrare a tips.fuorisalone.it, la tua guida personale per il Fuorisalone. Lascia che ti aiuti a esplorar le location e gli eventi del Fuorisalone.",
 	"LandingPage.Learn_more" : "per saperne di più...",
@@ -30,6 +31,5 @@
 	"LandingPage.Sign_in_using_code": "Entra con il codice",
 	"LandingPage.Sign_in_using_Twitter" :"Entra con Twitter",
 	"LandingPage.User_unknown_error" : "Siamo spiacenti, non abbiamo ancora visto nessun tuo tweet geo-referenziato che parlava delle location e degli eventi del fuorisalone. Per favore, tweeta delle location e degli eventi del fuorisalone ricordandoti di permettere all’applicazione che usi di comunicare a twitter la tua posizione. Ti inviteremo presto. Qua sotto puoi vedere quello che mostriamo agli utenti che invitiamo.",
-	"LandingPage.About_Fuorisalone_tips" :"Circa Fuorisalone tips",
-	"LandingPage.About_text" :"TODO: about text"
+	"LandingPage.About_Fuorisalone_tips" :"Circa Fuorisalone tips"
 }

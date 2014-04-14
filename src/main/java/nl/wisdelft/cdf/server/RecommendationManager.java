@@ -3,7 +3,6 @@
  */
 package nl.wisdelft.cdf.server;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,7 +19,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Asynchronous;
 import javax.ejb.Schedule;
-import javax.ejb.Schedules;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.event.Event;
@@ -57,6 +55,8 @@ import com.hp.hpl.jena.query.Syntax;
 @Startup
 public class RecommendationManager {
 
+	private final String MODULE_ACTIVE_PROPERTY = "module_active_processRecommendations";
+
 	@Inject
 	private Utility utility;
 
@@ -92,7 +92,7 @@ public class RecommendationManager {
 	@PostConstruct
 	public void inititialize() {
 		// retrieve all the venues in the system
-		if (!utility.getPropertyAsBoolean("module_active_processRecommendations")) {
+		if (!isActive()) {
 			logger.info(RecommendationManager.class.getSimpleName() + " not started. Disabled in config.");
 			return;
 		}
@@ -106,35 +106,87 @@ public class RecommendationManager {
 		logger.info(RecommendationManager.class.getSimpleName() + " stopped.");
 	}
 
-	@Schedules({ @Schedule(persistent = false, hour = "*", minute = "0/2"), @Schedule(persistent = false, hour = "5,17") })
+	public boolean isActive() {
+		return utility.getPropertyAsBoolean(MODULE_ACTIVE_PROPERTY);
+	}
+
+	// @Schedule(persistent = false, hour = "*", minute = "50")
+	// public void processRecommendationsOnce(Timer timer) {
+	// getMorningRecommendations();
+	// timer.cancel();
+	// }
+
+	/**
+	 * Get the recommendation from the timeslot YESTERDAY 17.00 until NOW. The
+	 * events are from TODAY.
+	 */
+	@Schedule(persistent = false, hour = "9")
 	@Asynchronous
-	private void getRecommendations() {
-		if (!utility.getPropertyAsBoolean("module_active_processRecommendations")) {
+	private void getMorningRecommendations() {
+		if (!isActive()) {
 			return;
 		}
+		// determine the timeslot
+		Calendar cal = Calendar.getInstance();
+		// determine NOW
+		Date now = cal.getTime();
+		// initialize NOW values
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH);
+		int day = cal.get(Calendar.DAY_OF_MONTH);
+		// determine YESTERDAY 17.00
+		cal.set(year, month, day, 17, 0, 0);
+		cal.add(Calendar.DAY_OF_YEAR, -1);
+		Date yesterday = cal.getTime();
 
-		// TODO set the right sliding window date slot
-		Date to = Calendar.getInstance().getTime();
-		Date from = null;
-		try {
-			from = blackboardDateFormat.parse("2014-04-04T13:45:00+0200");
-		}
-		catch (ParseException e) {
-			e.printStackTrace();
-		}
+		// determine eventStart :YESTERDAY 23.59
+		cal.set(year, month, day, 23, 59, 59);
+		cal.add(Calendar.DAY_OF_YEAR, -1);
+		Date eventStart = cal.getTime();
+		// Determin eventEnd: TOMORROW 00.00
+		cal.set(year, month, day, 0, 0, 0);
+		cal.add(Calendar.DAY_OF_YEAR, 1);
+		Date eventEnd = cal.getTime();
 
-		// get the events for this date
-		Date eventStart = null;
-		Date eventEnd = null;
-		try {
-			eventStart = blackboardDateFormat.parse("2014-04-04T13:45:00+0200");
-			eventEnd = blackboardDateFormat.parse("2014-04-13T23:59:59+0200");
-		}
-		catch (ParseException e) {
-			e.printStackTrace();
-		}
+		// get the events
 		events = getAllVenueEvents(eventStart, eventEnd, 0);
-		processRecommendations(from, to);
+		processRecommendations(yesterday, now);
+	}
+
+	/**
+	 * Get the recommendation from the timeslot TODAY 09.00 until NOW. The events
+	 * are from TODAY.
+	 */
+	@Schedule(persistent = false, hour = "17")
+	@Asynchronous
+	private void getEveningRecommendations() {
+		if (!isActive()) {
+			return;
+		}
+		// determine the timeslot
+		Calendar cal = Calendar.getInstance();
+		// determine NOW
+		Date now = cal.getTime();
+		// initialize NOW values
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH);
+		int day = cal.get(Calendar.DAY_OF_MONTH);
+		// determine NOW 09.00
+		cal.set(year, month, day, 9, 0, 0);
+		Date morning = cal.getTime();
+
+		// determine eventStart :YESTERDAY 23.59
+		cal.set(year, month, day, 23, 59, 59);
+		cal.add(Calendar.DAY_OF_YEAR, -1);
+		Date eventStart = cal.getTime();
+		// Determine eventEnd: TOMORROW 00.00
+		cal.set(year, month, day, 0, 0, 0);
+		cal.add(Calendar.DAY_OF_YEAR, 1);
+		Date eventEnd = cal.getTime();
+
+		// get the events
+		events = getAllVenueEvents(eventStart, eventEnd, 0);
+		processRecommendations(morning, now);
 	}
 
 	public Venue getVenue(String venueID) {
@@ -151,15 +203,27 @@ public class RecommendationManager {
 		}
 	}
 
+	/**
+	 * Gets the associated VenueEvents of the venue
+	 * 
+	 * @param venue
+	 * @return A list (possibly empty) of VenueEvents belonging to the venue
+	 */
 	public List<VenueEvent> getVenueEvents(Venue venue) {
+		List<VenueEvent> e = new ArrayList<VenueEvent>();
+
 		if (events == null) {
 			logger.warn("Venue info requested but venues are not yet retrieved from server");
-			return new ArrayList<VenueEvent>();
 		}
 		else {
-			List<VenueEvent> val = events.get(venue);
-			return events.get(venue);
+			if (events.get(venue) != null) {
+				e = events.get(venue);
+			}
+			else {
+				logger.warn("No events for venue found. Venue: " + venue);
+			}
 		}
+		return e;
 	}
 
 	/**
@@ -207,10 +271,10 @@ public class RecommendationManager {
 		return venues;
 	}
 
-	protected Map<Venue, List<VenueEvent>> getAllVenueEvents(Date d1, Date d2, int intervalHours) {
+	protected Map<Venue, List<VenueEvent>> getAllVenueEvents(Date from, Date to, int intervalHours) {
 		Map<Venue, List<VenueEvent>> events = new HashMap<Venue, List<VenueEvent>>();
-		if (d2 == null) {
-			d2 = new Date(d1.getTime() + (intervalHours * 60 * 60 * 1000));
+		if (to == null) {
+			to = new Date(from.getTime() + (intervalHours * 60 * 60 * 1000));
 		}
 		//@formatter:off
 		String queryString = "prefix xsd: <http://www.w3.org/2001/XMLSchema#> "
@@ -237,10 +301,10 @@ public class RecommendationManager {
 				+ "tl:hasBeginning [ tl:inXSDDateTime ?startTime ] ; "
 				+ "tl:hasEnd [ tl:inXSDDateTime ?endTime ] "
 				+ "] . "
-				+ "FILTER (?startTime >= \""+blackboardDateFormat.format(d1) +"\"^^xsd:dateTime && ?endTime <= \""+blackboardDateFormat.format(d2)+"\"^^xsd:dateTime ) " + "}";
+				+ "FILTER (?startTime >= \""+blackboardDateFormat.format(from) +"\"^^xsd:dateTime && ?endTime <= \""+blackboardDateFormat.format(to)+"\"^^xsd:dateTime ) " + "}";
 		//@formatter:on
 		Query query = QueryFactory.create(queryString, Syntax.syntaxSPARQL_11);
-		logger.info("GetEvents query:\n" + queryString);
+		logger.info("Getting all events from '" + from + "' to '" + to + "'");
 		QueryExecution qexec = QueryExecutionFactory.createServiceRequest("http://www.streamreasoning.com/demos/mdw14/fuseki/cse_info/query",
 				query);
 
@@ -280,8 +344,15 @@ public class RecommendationManager {
 		return events;
 	}
 
-	protected Map<Long, List<nl.wisdelft.cdf.client.shared.Recommendation>> getRecommendations(Date from, Date to) {
-		logger.info("Getting recommendations");
+	/**
+	 * Returns recommendations between a certain time period. Recommendations are
+	 * not persisted.
+	 * 
+	 * @param from
+	 * @param to
+	 * @return
+	 */
+	protected Map<Long, List<nl.wisdelft.cdf.client.shared.Recommendation>> getRecommendationsFromDB(Date from, Date to) {
 		BlackboardMediator myBB = new BlackboardMediator(Agents.VVR);
 		// Map based storage for recommendation. Key is the userID, value a list
 		// of recommendations.
@@ -291,7 +362,6 @@ public class RecommendationManager {
 		try {
 			// Get the "data" which is in the interval
 			List<String> graphs = myBB.getRecentGraphNames(from, to);
-			logger.info("Retrieved graphs:" + graphs.size());
 			for (String name : graphs) {
 				String model = myBB.getGraph(name);
 				// only process correct models
@@ -337,14 +407,14 @@ public class RecommendationManager {
 	 * ENGAGED are not send.
 	 */
 	protected void processRecommendations(Date from, Date to) {
-		logger.info("Processing recommendations");
+		logger.info("Getting all recommendations from '" + from + "' to '" + to + "'");
 		// use this date for every recommendation in this batch
 		Date now = new Date();
 
 		// get the recommendations
 		Integer maxUserRecommendationPerBatch = utility.getPropertyAsInt("maxUserRecommendationPerBatch");
 		if (maxUserRecommendationPerBatch == null) maxUserRecommendationPerBatch = 3;
-		Map<Long, List<nl.wisdelft.cdf.client.shared.Recommendation>> recommendations = getRecommendations(from, to);
+		Map<Long, List<nl.wisdelft.cdf.client.shared.Recommendation>> recommendations = getRecommendationsFromDB(from, to);
 
 		for (Long userID : recommendations.keySet()) {
 			// get the recommendations for this user
@@ -384,9 +454,7 @@ public class RecommendationManager {
 					rec.setUserID(tempUserID);
 				}
 
-				// recommendations will be send to the user. Notify him of new
-				// recommendations.
-				newRecommendationsForUser.fire(user);
+				// recommendations will be send to the user.
 				// update additional info
 				Venue venue = getVenue(rec.getVenueID());
 				rec.setVenue(venue);
@@ -399,15 +467,12 @@ public class RecommendationManager {
 				recService.create(rec);
 				logger.info("Recommendation stored in DB. Firing event. " + rec);
 				// fire the event
-
 				newRecommendation.fire(rec);
 
-				// sleep for a half a second not to overwhelm twitter
-				try {
-					Thread.sleep(500);
-				}
-				catch (InterruptedException e) {}
-
+			}
+			// Notify him of new recommendations.
+			if (recs.size() > 0) {
+				newRecommendationsForUser.fire(user);
 			}
 		}
 	}
