@@ -8,8 +8,6 @@ The AttendeeEngager (AE) receives interesting Twitter users that need to be enga
 - Stefano Bocconi (secundary developer)
 - Alessandro Bozzon (project conceptualization)
 
-###Acknowledgements
-This work was partially supported by the Dutch national program COMMIT.
 
 ## Organization
 **Delft University of Technology** <br />
@@ -19,4 +17,10 @@ This work was partially supported by the Dutch national program COMMIT.
 [Contact] j.e.g.oosterman@tudelft.nl <br />
 
 ![tudelft](http://wisserver.st.ewi.tudelft.nl/github_files/TUD.png)
-![commit](http://wisserver.st.ewi.tudelft.nl/github_files/COMMIT.png)
+
+##Acknowledgements
+This work was partially funded by the Dutch national program COMMIT and by the EIT ICT Labs project City Data Fusion for Event Management (13119,14189)
+
+![COMMIT](http://wisserver.st.ewi.tudelft.nl/github_files/COMMIT.png?)
+
+![EIT](http://wisserver.st.ewi.tudelft.nl/github_files/EIT.png)
