@@ -1,0 +1,73 @@
+/* Space out content a bit */
+body {
+	font-family: "sansregular";
+}
+
+.navbar {
+	margin-bottom: 20px;
+}
+
+.container {
+	width: 100%; padding-top: 20px; padding-bottom: 20px; padding-top: 20px;
+}
+
+.center {
+	margin-right: auto; margin-left: auto; width: 80%;
+}
+
+a.vote {
+	margin-right: 7px;
+}
+
+a.vote.green {
+	color: green;
+}
+
+a.vote.red {
+	color: red;
+}
+
+.imageRating {
+	text-align: center; font-size: xx-large;
+}
+
+.imageRating span:first-child {
+	margin-right: 5%;
+}
+
+.blackBarTop {
+	height: 36px; background-color: black;
+}
+
+.milanodesignweek {
+	top: -36px; left: 86px; position: relative
+}
+
+.fuoriosaloneBar {
+	padding-top: 20px;
+}
+
+.tipsBar {
+	background-image: url("../images/title_background.png"); height: 166px;
+	color: #5e5e5e; font-family: 'sansextralight'; font-size: 5.5em;
+	line-height: 60px; font-weight: normal;
+}
+
+.tipsBar span {
+	position: relative; top: 46px;
+}
+
+.navigationBar {
+	position: absolute; top: 1px; right: 3px;
+}
+
+.nobullet,.nobullet ul {
+	list-style-type: none;
+}
+
+.footer
+{
+	margin-top: 50px;
+	padding-top:10px;
+	border-top: solid grey 3px;
+}

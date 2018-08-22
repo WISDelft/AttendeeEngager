@@ -5,10 +5,9 @@
 	<persistence-unit name="forge-default"
 		transaction-type="JTA">
 		<description>PostgreSQL AttendeeEngager</description>
-		<!-- Datasources should be specified in JSBOSS -->
 		<!-- <jta-data-source>java:jboss/datasources/pgsqlattendeeengager_live</jta-data-source> -->
-		<!-- <jta-data-source>java:jboss/datasources/pgsqlattendeeengager</jta-data-source>-->
-		<jta-data-source>java:jboss/datasources/ExampleDS</jta-data-source>
+		<jta-data-source>java:jboss/datasources/pgsqlattendeeengager</jta-data-source>
+		<!-- <jta-data-source>java:jboss/datasources/ExampleDS</jta-data-source> -->
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
 		<properties>
 			<property name="hibernate.hbm2ddl.auto" value="update" />

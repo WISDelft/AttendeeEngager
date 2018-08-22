@@ -40,8 +40,7 @@ public class LinkClicked {
 	/**
 	 * Required for ORM
 	 */
-	@SuppressWarnings("unused")
-	private LinkClicked() {
+	protected LinkClicked() {
 
 	}
 

@@ -35,8 +35,8 @@
     <errai.dev.context>${project.artifactId}</errai.dev.context>
     <as.version>7.1.1.Final</as.version>
     <!-- Add the absolute path for $JBOSS_HOME below to manage another instance -->
-    <errai.jboss.home>${project.build.directory}/jboss-as-${as.version}</errai.jboss.home>
-    <!-- <errai.jboss.home>/Applications/jboss-as-7.1.1.Final</errai.jboss.home>-->
+    <!-- <errai.jboss.home>${project.build.directory}/jboss-as-${as.version}</errai.jboss.home>-->
+    <errai.jboss.home>/Applications/jboss-as-7.1.1.Final</errai.jboss.home>
   </properties>
 
   <dependencyManagement>
@@ -147,7 +147,7 @@
     <dependency>
 		<groupId>org.apache.httpcomponents</groupId>
 		<artifactId>httpclient</artifactId>
-		<version>4.3.3</version><!--$NO-MVN-MAN-VER$-->
+		<version>4.3.3</version>
 	</dependency>
 	<dependency>
 		<groupId>commons-configuration</groupId>
@@ -205,19 +205,6 @@
                     <skip />
                   </action>
                 </pluginExecution>
-                <pluginExecution>
-                	<pluginExecutionFilter>
-                		<groupId>org.apache.maven.plugins</groupId>
-                		<artifactId>maven-dependency-plugin</artifactId>
-                		<versionRange>[2.8,)</versionRange>
-                		<goals>
-                			<goal>unpack</goal>
-                		</goals>
-                	</pluginExecutionFilter>
-                	<action>
-                		<ignore></ignore>
-                	</action>
-                </pluginExecution>
               </pluginExecutions>
             </lifecycleMappingMetadata>
           </configuration>
@@ -273,12 +260,12 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.6</source>
+          <target>1.6</target>
         </configuration>
       </plugin>
       <!-- Unpack jboss-as from maven. Remove this if you wish to use your own jboss/wildfly instance. -->
- <plugin>
+      <!-- <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
@@ -302,7 +289,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>    
+      </plugin>   -->   
     </plugins>
   </build>
 

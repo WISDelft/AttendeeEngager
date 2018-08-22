@@ -5,15 +5,19 @@ package nl.wisdelft.cdf.server;
 
 import java.net.URL;
 import java.util.UUID;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+
 import nl.wisdelft.cdf.client.shared.TwitterUser;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConversionException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.slf4j.Logger;
+
 import twitter4j.User;
 
 /**
@@ -40,8 +44,7 @@ public class Utility {
 		try {
 			config = new PropertiesConfiguration(path);
 			config.setReloadingStrategy(new FileChangedReloadingStrategy());
-		}
-		catch (ConfigurationException ex) {
+		} catch (ConfigurationException ex) {
 			logger.error("Could not load Properties file", ex);
 		}
 	}
@@ -56,8 +59,7 @@ public class Utility {
 		Long l;
 		try {
 			l = Long.parseLong(str);
-		}
-		catch (NumberFormatException ex) {
+		} catch (NumberFormatException ex) {
 			l = null;
 		}
 		return l;
@@ -73,8 +75,7 @@ public class Utility {
 		Integer l;
 		try {
 			l = Integer.parseInt(str);
-		}
-		catch (NumberFormatException ex) {
+		} catch (NumberFormatException ex) {
 			l = null;
 		}
 		return l;
@@ -91,8 +92,7 @@ public class Utility {
 		Boolean b;
 		try {
 			b = Boolean.parseBoolean(str);
-		}
-		catch (NumberFormatException ex) {
+		} catch (NumberFormatException ex) {
 			b = null;
 		}
 		return b;
@@ -101,10 +101,11 @@ public class Utility {
 	/**
 	 * Creates a random UUID for the user.
 	 * 
-	 * @param user The user to calculate the dashboardpath for
+	 * @param user
+	 *            The user to calculate the dashboardpath for
 	 * @return A new random UUID, or the existing dashboardPath if the user
-	 *         already has one, or null if the user, user ID or user screenName is
-	 *         null
+	 *         already has one, or null if the user, user ID or user screenName
+	 *         is null
 	 */
 	public String createDashboardPath(TwitterUser user) {
 		if (user.getDashboardPath() != null) {
@@ -155,8 +156,7 @@ public class Utility {
 	public Integer getPropertyAsInt(String propertyName) {
 		try {
 			return config.getInteger(propertyName, null);
-		}
-		catch (ConversionException ex) {
+		} catch (ConversionException ex) {
 			return null;
 		}
 	}
@@ -170,8 +170,7 @@ public class Utility {
 	public boolean getPropertyAsBoolean(String propertyName) {
 		try {
 			return config.getBoolean(propertyName, false);
-		}
-		catch (ConversionException ex) {
+		} catch (ConversionException ex) {
 			return false;
 		}
 	}
@@ -179,7 +178,8 @@ public class Utility {
 	/**
 	 * Returns a filled TwitterUser object. The object is not persisted.
 	 * 
-	 * @param user Twitter4J User object
+	 * @param user
+	 *            Twitter4J User object
 	 * @return
 	 */
 	public TwitterUser fromTwitter4JUser(User u) {
